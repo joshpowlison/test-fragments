@@ -1,0 +1,94 @@
+<main>
+	<h1>Fragment Possibilities</h1>
+	<h4>Put in line-separated fragments and watch how they read when rearranged</h4>
+	<textarea id="phrase"></textarea>
+	<div id="results"></div>
+</main>
+
+<style>
+body{
+	margin:0;
+	padding:0;
+}
+
+main{
+	display:block;
+	margin:0 auto;
+	width:45rem;
+	max-width:100%;
+}
+
+h1,h4{
+	text-align:center;
+}
+
+#phrase{
+	display:block;
+	margin:auto;
+}
+
+#phrase, .possibility{
+	width:15rem;
+	height:8rem;
+	
+	padding:.5em;
+    box-sizing:border-box;
+}
+
+.possibility{
+	border:1px solid black;
+	float:left;
+	margin:0;
+	min-width:10rem;
+	max-width:100%;
+}
+</style>
+
+<script>
+
+var results = [];
+document.getElementById("phrase").addEventListener("change",function(){
+	var text = document.getElementById("phrase").value;
+	results = [];
+	resultString = '';
+	
+	checkAtDepth(text.split(/[\r\n]+/g));
+	
+	console.log(results);
+	
+	var l = results.length;
+	for(let i = 0; i < l; i++){
+		let style = 'background-color:green;color:white;';
+		if(i / l !== 0) style = '';
+		
+		resultString += '<p class="possibility" style="'+style+';">' + results[i] + '</p>';
+	}
+	
+	document.getElementById("results").innerHTML = resultString;
+});
+
+function checkAtDepth(fragments, string = '', depth = 0){
+	console.log(fragments);
+
+	// Check all possibilities at this depth
+	for(let i = 0; i < fragments.length; i++){
+		let thisString = string;
+		if(thisString.length) thisString += '<br>';
+		thisString += fragments[i];
+		
+		let thisFragmentArray = fragments.slice();
+		thisFragmentArray.splice(i,1);
+	
+		console.log({thisString, fragments, thisFragmentArray});
+	
+		// If we have a deeper depth to check
+		if(thisFragmentArray.length){
+			checkAtDepth(thisFragmentArray, thisString, depth + 1);
+		}else{
+			// Add the result to the array
+			results.push(thisString);
+		}
+	}
+}
+
+</script>
